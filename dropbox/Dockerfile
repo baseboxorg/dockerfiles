@@ -9,8 +9,9 @@ RUN [ "cross-build-start" ]
 RUN addgroup -g 1000 user && \
     adduser -D -u 1000 -G user -s /bin/ash user
 
+COPY dropbox.py /usr/local/bin/dropbox-cli
+
 RUN apk add --no-cache ca-certificates python \
-    && wget https://www.dropbox.com/download?dl=packages/dropbox.py -O /usr/local/bin/dropbox-cli \
     && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf - \
     && mkdir -p /home/user/.dropbox /home/user/Dropbox \
     && chmod +x /usr/local/bin/dropbox-cli \
