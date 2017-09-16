@@ -10,13 +10,17 @@ RUN addgroup -g 1000 user && \
     adduser -D -u 1000 -G user -s /bin/ash user
     
 RUN apk add --no-cache curl ca-certificates python tar \
-    && wget https://www.dropbox.com/download?dl=packages/dropbox.py -O /usr/local/bin/dropbox-cli \
-    && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf - \
     && mkdir -p /home/user/.dropbox /home/user/Dropbox \
+    && curl -Lo dropbox-linux-x86_64.tar.gz https://www.dropbox.com/download?plat=lnx.x86_64 \
+    && tar xzfv dropbox-linux-x86_64.tar.gz --strip 1 -C /usr/local/bin/dropbox \
+    && rm dropbox-linux-x86_64.tar.gz \
+    && curl -Lo dropbox.py https://www.dropbox.com/download?dl=packages/dropbox.py \
+    && mv dropbox.py /usr/local/bin/dropbox-cli \
     && chmod +x /usr/local/bin/dropbox-cli \
+    && chmod +x /usr/local/bin/dropbox \
     && chown user:user /usr/local/bin/dropbox-cli \
-    && chown user:user -R /home/user/ \
-    && echo "Installed Dropbox version:" $(cat /home/user/.dropbox-dist/VERSION)
+    && chown user:user /usr/local/bin/dropbox \
+    && chown user:user -R /home/user/ 
 
 RUN [ "cross-build-end" ]
 
@@ -28,4 +32,5 @@ EXPOSE 17500
 
 VOLUME ["/home/user/Dropbox", "/home/user/.dropbox"]
 
-CMD ["/home/user/.dropbox-dist/dropboxd"]
+CMD ["/usr/local/bin/dropbox"]
+
