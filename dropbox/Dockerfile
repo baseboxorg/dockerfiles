@@ -10,7 +10,7 @@ RUN addgroup -g 1000 user && \
     adduser -D -u 1000 -G user -s /bin/bash user
     
 RUN apk add --no-cache ca-certificates python \
-    && mkdir -p /home/user/.dropbox /home/user/Dropbox /local/bin/dropbox /local/bin/dropbox-cli \
+    && mkdir -p /home/user/.dropbox /home/user/Dropbox /usr/local/bin/dropbox /usr/local/bin/dropbox-cli \
     && curl -Lo dropbox-linux-x86_64.tar.gz https://www.dropbox.com/download?plat=lnx.x86_64 \
     && tar xzfv dropbox-linux-x86_64.tar.gz --strip 1 -C /usr/local/bin/dropbox \
     && rm dropbox-linux-x86_64.tar.gz \
